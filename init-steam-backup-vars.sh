@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-if [ -d "~/steam-backup.env" ];then
+if [ -f "$HOME/steam-backup.env" ];then
     export $(grep -v '^#' ~/steam-backup.env | xargs)
 fi
 
@@ -18,4 +18,5 @@ mkdir -p $BIN_DIR
 # echo "STEAM_SAVES_DIR = $STEAM_SAVES_DIR"
 # echo "STEAM_BKUPER_REPO = $STEAM_BKUPER_REPO"
 # echo "STEAM_SAVES_REPO = $STEAM_SAVES_REPO"
+# echo "STEAM_SAVES_REPO2 = $STEAM_SAVES_REPO2"
 # echo "BIN_DIR = $BIN_DIR"
