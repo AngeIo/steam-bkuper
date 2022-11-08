@@ -4,8 +4,8 @@ SCRIPT_DIR=$(dirname `readlink -f $0`)
 source $SCRIPT_DIR/init-steam-backup-vars.sh
 
 cd $BIN_DIR
-wget https://github.com/mtkennerly/ludusavi/releases/download/v0.10.0/ludusavi-v0.10.0-linux.zip -O ludusavi-v0.10.0-linux.zip
-unzip -o ludusavi-v0.10.0-linux.zip
+wget -qc https://github.com/mtkennerly/ludusavi/releases/download/v0.10.0/ludusavi-v0.10.0-linux.zip -O ludusavi-v0.10.0-linux.zip
+unzip -oq ludusavi-v0.10.0-linux.zip
 rm ludusavi-v0.10.0-linux.zip
 
 if [ ! -d "$STEAM_BKUPER_DIR" ]; then
