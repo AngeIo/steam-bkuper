@@ -6,7 +6,6 @@ export STEAM_BKUPER_REPO="${STEAM_BKUPER_REPO:-'https://github.com/AngeIo/steam-
 export STEAM_SAVES_REPO="${STEAM_SAVES_REPO:?}"
 export BIN_DIR=$HOME/bin
 
-mkdir -p $STEAM_SAVES_DIR
 mkdir -p $BIN_DIR
 
 # Uncomment for debugging
