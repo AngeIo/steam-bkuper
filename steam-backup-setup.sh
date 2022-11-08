@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 SCRIPT_DIR=$(dirname `readlink -f $0`)
-$SCRIPT_DIR/init-steam-backup-vars.sh
+source $SCRIPT_DIR/init-steam-backup-vars.sh
 
 cd $BIN_DIR
 wget https://github.com/mtkennerly/ludusavi/releases/download/v0.10.0/ludusavi-v0.10.0-linux.zip -O ludusavi-v0.10.0-linux.zip

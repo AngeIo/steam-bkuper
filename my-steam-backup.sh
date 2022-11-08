@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 SCRIPT_DIR=$(dirname `readlink -f $0`)
-$SCRIPT_DIR/init-steam-backup-vars.sh
+source $SCRIPT_DIR/init-steam-backup-vars.sh
 
 cd $STEAM_SAVES_DIR
 $BIN_DIR/ludusavi backup --force --path $STEAM_SAVES_DIR/ludusavi-backup
