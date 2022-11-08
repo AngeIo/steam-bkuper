@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
+set -e
 
-if [ -d ".env" ];then
-    export $(grep -v '^#' .env | xargs)
+if [ -d "~/steam-backup.env" ];then
+    export $(grep -v '^#' ~/steam-backup.env | xargs)
 fi
 
 export STEAM_BKUPER_DIR="${STEAM_BKUPER_DIR:-$HOME/.local/share/steam-bkuper}"
