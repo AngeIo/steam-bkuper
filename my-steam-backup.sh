@@ -1,7 +1,11 @@
-#!/bin/sh
-cd /home/deck/Documents/gitrepo/steam-saves
-/home/deck/Documents/bin/ludusavi backup --force --path /home/deck/Documents/gitrepo/steam-saves/ludusavi-backup
-LD_PRELOAD="/usr/lib/libcurl.so.4" /home/deck/Documents/bin/git-sync -s -n
+#!/usr/bin/env bash
+
+SCRIPT_DIR=$(dirname `readlink -f $0`)
+source $SCRIPT_DIR/init-steam-backup-vars.sh
+
+cd $STEAM_SAVES_DIR
+$BIN_DIR/ludusavi backup --force --path $STEAM_SAVES_DIR/ludusavi-backup
+LD_PRELOAD="/usr/lib/libcurl.so.4" $BIN_DIR/git-sync -s -n
 
 ## For logs, type this in Launch Options :
 # %command% ; /home/deck/Documents/bin/my-steam-backup.sh > /tmp/$(date +'%F_%H.%M.%S').testlog ; ping github.com -c 2 > /tmp/$(date +'%F_%H.%M.%S').testping
