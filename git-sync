@@ -243,6 +243,7 @@ fi
 if [ -z "$remote_name" ] ; then
     remote_name=$(git config --get branch.$branch_name.remote)
 fi
+
 if [ -z "$remote_name" ] ; then
     __log_msg "the current branch does not have a configured remote."
     echo

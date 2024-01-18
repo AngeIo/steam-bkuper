@@ -1,5 +1,6 @@
 # Steam BKUPER
 This script is designed to backup all Steam game save files automatically (optimized for Steam Deck).
+
 ## Why this script?
 I played a lot on my Steam Deck. One day, I left my console charging all night and when I wanted to get back in game, the OS refused to boot and I was stuck on BIOS. The SSD decided to stop working.
 I was a bit worried at first, but then I realised that my game saves should be safe in the Steam Cloud.
@@ -8,145 +9,143 @@ But, of course, **I was wrong**.
 
 Why? Because some games do not provide Steam Cloud, like `Just Cause 3`.
 
-I created this script to prevent this from happening one more time and loosing my saves once more.
+This script has been specially made to ensure that those who use it NEVER EVER lose their precious game saves in such cases.
+
 ## Features
+- [x] Easy to install with a single command
 - [x] Use Git for backup versioning
-- [x] While game is starting and when game is closed, do a backup
-- [x] Automatic
+- [x] While game is starting and/or when game is closed, do a backup
+- [x] "Launch Options" are automatically set on all games of your Steam library
+
 ## Prerequisites
-- Tested on Steam OS 3.0 (Arch Linux) but could be working on other distros
+- Tested on SteamOS 3.5.7 (Arch Linux) but could be working on other distros
 - Git
-- ...?
+
 ## Usage
 ### (Optional) Connect to your Steam Deck
-If you want to easily access your Steam Deck from your main computer, follow these steps :
+If you want to easily access your Steam Deck from your main computer, follow these steps:
 
 You have to create a password before you can access your console with SSH.
 First, switch to Desktop Mode, then open the terminal called `Konsole`.
-Type this command to define your new password :
+Type this command to define your new password:
 ```
 passwd
 ```
-Now start SSH service and type your password :
+Now start SSH service and type your password:
 ```
 sudo systemctl start sshd
 ```
-Enable the SSH service so it stays up even after a reboot of the Steam Deck (make it accessible while in Game Mode too!) :
+Enable the SSH service so it stays up even after a reboot of the Steam Deck (make it accessible while in Game Mode too!):
 ```
 sudo systemctl enable sshd
 ```
-For more information, you can check this FAQ from Valve : https://help.steampowered.com/en/faqs/view/671A-4453-E8D2-323C
-### Download required files
-#### Ludusavi
-Tested with version `0.10.0` of `ludusavi`, may work with latest.
-Go to the exact path with cd then download and extract archive to get `ludusavi` binary :
+For more information, you can check this FAQ from Valve: https://help.steampowered.com/en/faqs/view/671A-4453-E8D2-323C
+
+### Installation
+Clone the repository:
 ```
-cd /home/deck/Documents/bin
-wget https://github.com/mtkennerly/ludusavi/releases/download/v0.10.0/ludusavi-v0.10.0-linux.zip
-unzip ludusavi-v0.10.0-linux.zip
-rm ludusavi-v0.10.0-linux.zip
-```
-`ludusavi` binary exact location is now `/home/deck/Documents/bin/ludusavi`.
-#### This repo
-I suggest going to this exact path and clone the repo :
-```
-# If the path below does not exist, create it first with this command
-# mkdir -p /home/deck/Documents/gitrepo
-cd /home/deck/Documents/gitrepo
 git clone https://github.com/AngeIo/steam-bkuper
 cd steam-bkuper
 ```
-Then copy the files to the right location :
-```
-cp my-steam-backup.sh git-sync /home/deck/Documents/bin/
-```
-Give execution permission to these files :
-```
-chmod -R 755 /home/deck/Documents/bin
-```
-Now we can delete the repo :
-```
-cd /home/deck/Documents/gitrepo
-rm -rf /home/deck/Documents/gitrepo/steam-bkuper
-```
-### Set up Git repo for backups
-Create a new repo on GitLab, GitHub, or both.
-In my example, this repo is called `steam-saves`.
-Then, if you have multiple remote repos, you can link them to the main one like below if you want to store your backups on multiple locations (configured for 2 repos by default, one named `origin` and the other `origin-new`).
-```
-git remote add origin-new https://gitlab.com/AngeIo/steam-saves.git
-```
-/!\ Please use the same branch name as above `origin-new` so it matches with `git-sync` script or you'll need to modify it too.
-Check that the git remote repos are correctly setup :
-```
-git remote -v
-```
-The output should look like this if done correctly :
-```
-(deck@asundeck steam-saves)$ git remote -v
-origin  https://github.com/AngeIo/steam-saves.git (fetch)
-origin  https://github.com/AngeIo/steam-saves.git (push)
-origin-new      https://gitlab.com/AngeIo/steam-saves.git (fetch)
-origin-new      https://gitlab.com/AngeIo/steam-saves.git (push)
-(deck@asundeck steam-saves)$
-```
+
+#### Variables configuration
+You have to edit the variables to make sure everything installs in the correct paths and the script behaves the way you want, here's how:
+
+- Rename `.env.template` to `.env`.
+- Create a new repository on GitLab, GitHub, or both with the name of your choice, in my example, this repo is called `steam-saves`. Then, copy your 2 URLs respectively in `STEAM_SAVES_REPO` and `STEAM_SAVES_REPO2` variables (or only `STEAM_SAVES_REPO` if you have one).
+- (Optional) Find your `AccountID`/`Friend Code` and put it in `STEAM_ACCOUNTID` (get it from https://steamcommunity.com/id/YOUR_USERNAME/friends/add or https://steamdb.info/calculator/)
+- Modify all other variables in `.env` to match with your environment.
+
 ### Apply script to games
-Add to each game's "Launch Options" the command below :
-#### Backup after game is closed (recommended)
+Here are examples of behaviour you can apply by modifying the `STEAM_LOPTS` variable in `.env` so "Launch Options" are set automatically:
+
+#### Backup after the game is closed (default)
 ```
-%command% ; /home/deck/Documents/bin/my-steam-backup.sh
+%command%;/path/to/script/my-steam-backup.sh
 ```
-#### Backup while the game is starting
+
+#### Backup before the game is starting
 ```
-/home/deck/Documents/bin/my-steam-backup.sh ; %command%
+/path/to/script/my-steam-backup.sh;%command%
 ```
-#### Backup while the game is starting and after the game is closed
+
+#### Backup before the game is starting and after the game is closed
 ```
-/home/deck/Documents/bin/my-steam-backup.sh ; %command% ; /home/deck/Documents/bin/my-steam-backup.sh
+/path/to/script/my-steam-backup.sh;%command%;/path/to/script/my-steam-backup.sh
 ```
-### Make sure everything is working
-Start a game with Launch Options configured.
-Close it.
-Check your remote Git repository (GitHub, GitLab, etc.) if the folder `/home/deck/Documents/gitrepo/steam-saves/ludusavi-backup` is populated with your save files then congratulations! You are now safe from any defects your Steam Deck/PC may encounter!
-### Final file tree
-Here is what your folders should look like in `/home/deck/Documents` :
+
+### Final touches
+Once you are satisfied with your variables in the `.env` file, you can launch the installation by typing this command:
 ```
-(deck@asundeck Documents)$ tree
+./steam-backup-setup.sh
+```
+To allow the git repositories to push content to remote in the background while in "Game Mode", you must enter these commands the first time:
+```
+# Git will store your credentials so you don't have to type them next time
+git config --global credential.helper store
+```
+Then run `$BIN_DIR/my-steam-backup.sh` from your terminal so you are asked to type your git login and password for each repositories once to store them:
+```
+/path/to/script/my-steam-backup.sh
+```
+You are now ready to backup your whole Steam library!
+
+### How does it work?
+To make sure everything is working:
+- Start a game with Launch Options configured
+- Close it
+- (Yes, it's _that_ simple)
+
+Check your remote Git repository (GitHub, GitLab, etc.), if the directory `$STEAM_SAVES_DIR/ludusavi-backup` is populated with your save files then congratulations! You are now safe from any defects your Steam Deck/PC may encounter!
+
+### Final files tree
+Here is what your directories should look like in `STEAM_SAVES_DIR`:
+```
+(deck@asundeck steam-saves)$ tree
 .
-├── bin
-│   ├── git-sync
-│   ├── ludusavi
-│   └── my-steam-backup.sh
-└── gitrepo
-    └── steam-saves [Git repo containing your backups]
-        ├── ludusavi-backup
-        │   ├── Alien_ Isolation
-        │   │   ├── drive-0
-        │   │   │   └── home
-        │   │   │       └── deck
-        │   │   └── mapping.yaml
+├── ludusavi-backup
+│   ├── Alien_ Isolation
+│   │   ├── drive-0
+│   │   │   └── home
+│   │   │       └── deck
+│   │   └── mapping.yaml
 
 [...]
 
-        │   └── Uno (2016)
-        │       ├── drive-0
-        │       │   └── home
-        │       │       └── deck
-        │       └── mapping.yaml
-        ├── README.md
-        └── typescript
+│   └── Uno (2016)
+│       ├── drive-0
+│       │   └── home
+│       │       └── deck
+│       └── mapping.yaml
+├── README.md
+└── typescript
 
 XX directories, XX files
-(deck@asundeck Documents)$
+(deck@asundeck steam-saves)$
 ```
+
+## Save game restoration
+Here's how you can restore your backups:
+- Launch `ludusavi`, a nice GUI should open.
+- Click on `Restore Mode`.
+- In `Restore from` choose the `ludusavi-backup` directory inside your personal git repository: `STEAM_SAVES_DIR` (contains your save files).
+- Click on `Preview`, the list of backed up games should appear.
+- Select the games you want to restore by ticking them.
+- Click on `Restore`.
+- Enjoy!
+
 ## Roadmap
-- [ ] Use variables/env to modify paths, script names, etc. and prevent users to modify script directly
-- [ ] Create an all-in-one script so it's easier to install for users
-- [ ] Find a way to loop through all game's Launch Options and add the command automatically
+- [x] Use variables/env to modify paths, script names, etc. and prevent users to modify script directly
+- [x] Create an all-in-one script so it's easier to install for users
+- [x] Find a way to loop through all game's Launch Options and add the command automatically
+- [ ] Update to newer version of ludusavi and git-sync
+
 ## Contribution
-I know this script is far from perfect (school projects takes a lot of my time), that's why you can create pull requests if you wish to improve this script.
-Thanks!
+I know this script is far from perfect, please create pull requests if you want to help me improve it. Thanks!
+
 ## Credits
-- Matthew Kennerly and contributors for `ludusavi`
-- Simon Thum and contributors for `git-sync`
+- [Matthew Kennerly](https://github.com/mtkennerly) and contributors for [`ludusavi`](https://github.com/mtkennerly/ludusavi)
+- [Simon Thum](https://github.com/simonthum) and contributors for [`git-sync`](https://github.com/simonthum/git-sync)
+- [Ryan Beaman](https://github.com/WisdomWolf) for his contributions from [his personal public fork](https://github.com/WisdomWolf/steam-bkuper)
+- [frostworx](https://github.com/frostworx) for [his script to set Steam launch options on all games automatically](https://github.com/FeralInteractive/gamemode/issues/177)
 - Angelo
