@@ -103,7 +103,9 @@ To make sure everything is working:
 - Close it
 - (Yes, it's _that_ simple)
 
-Check your remote Git repository (GitHub, GitLab, etc.), if the directory `$STEAM_SAVES_DIR/ludusavi-backup` is populated with your save files then congratulations! You are now safe from any defects your Steam Deck/PC may encounter!
+Check your remote Git repository (GitHub, GitLab, etc.), if the directory `$STEAM_SAVES_DIR/ludusavi-backup` is populated with your save files then congratulations!
+
+You are now safe from any defects your Steam Deck/PC may encounter!
 
 ### Final files tree
 Here is what your directories should look like in `STEAM_SAVES_DIR`:
@@ -140,12 +142,6 @@ Here's how you can restore your backups:
 - Select the games you want to restore by ticking them.
 - Click on `Restore`.
 - Enjoy!
-
-## Roadmap
-- [x] Use variables/env to modify paths, script names, etc. and prevent users to modify script directly
-- [x] Create an all-in-one script so it's easier to install for users
-- [x] Find a way to loop through all game's Launch Options and add the command automatically
-- [ ] Update to newer version of ludusavi and git-sync
 
 ## Contribution
 I know this script is far from perfect, please create pull requests if you want to help me improve it. Thanks!
