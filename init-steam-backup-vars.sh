@@ -14,7 +14,7 @@ export STEAM_BKUPER_REPO="${STEAM_BKUPER_REPO:-'https://github.com/AngeIo/steam-
 export STEAM_SAVES_REPO="${STEAM_SAVES_REPO:?}"
 export STEAM_PATH="${STEAM_PATH:-'/home/deck/.local/share/Steam/userdata'}"
 export STEAM_LOPTS="${STEAM_LOPTS:-%command%;$BIN_DIR/my-steam-backup.sh}"
-export LUDUSAVI_VER="${LUDUSAVI_VER:-v0.19.0}"
+export LUDUSAVI_VER="${LUDUSAVI_VER:-v0.22.0}"
 export LUDUSAVI_FILE="${LUDUSAVI_FILE:-ludusavi-$LUDUSAVI_VER-linux.zip}"
 
 # Uncomment for debugging

@@ -18,7 +18,12 @@ This script has been specially made to ensure that those who use it NEVER EVER l
 - [x] "Launch Options" are automatically set on all games of your Steam library
 
 ## Prerequisites
-- Tested on SteamOS 3.5.7 (Arch Linux) and Ubuntu 22.04.3 but could be working on other distros
+> [!IMPORTANT]
+> You must be on the **Beta** version of SteamOS 3.5.7 (as of 01/19/24 - OS Build: `20231122.1`) for the latest version of ludusavi (v0.22.0) to work.
+>
+> If you don't want to switch to SteamOS Beta, you could downgrade to ludusavi v0.19.0 (latest version working on Stable) by modifying `LUDUSAVI_VER` in `.env`.
+
+- Tested on Arch Linux/SteamOS 3.5.7 Beta and Ubuntu 22.04.3 but could be working on other distros
 - Git
 
 ## Usage
