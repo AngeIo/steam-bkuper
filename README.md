@@ -18,7 +18,7 @@ This script has been specially made to ensure that those who use it NEVER EVER l
 - [x] "Launch Options" are automatically set on all games of your Steam library
 
 ## Prerequisites
-- Tested on SteamOS 3.5.7 (Arch Linux) but could be working on other distros
+- Tested on SteamOS 3.5.7 (Arch Linux) and Ubuntu 22.04.3 but could be working on other distros
 - Git
 
 ## Usage
