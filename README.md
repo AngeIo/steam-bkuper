@@ -1,5 +1,5 @@
 # Steam BKUPER
-This script is designed to backup all Steam game save files automatically (optimized for Steam Deck).
+This script is designed to backup all Steam game save files to git automatically (optimized for Steam Deck).
 
 ## Why this script?
 I played a lot on my Steam Deck. One day, I left my console charging all night and when I wanted to get back in game, the OS refused to boot and I was stuck on BIOS. The SSD decided to stop working.
