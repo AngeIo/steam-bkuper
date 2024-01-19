@@ -9,9 +9,9 @@ ln -s $SCRIPT_DIR/.env $HOME/steam-bkuper.env &>/dev/null || true
 source $SCRIPT_DIR/init-steam-backup-vars.sh
 
 cd $BIN_DIR
-wget -qc https://github.com/mtkennerly/ludusavi/releases/download/v0.10.0/ludusavi-v0.10.0-linux.zip -O ludusavi-v0.10.0-linux.zip
-unzip -oq ludusavi-v0.10.0-linux.zip
-rm ludusavi-v0.10.0-linux.zip
+wget -qc https://github.com/mtkennerly/ludusavi/releases/download/$LUDUSAVI_VER/$LUDUSAVI_FILE -O $LUDUSAVI_FILE
+unzip -oq $LUDUSAVI_FILE
+rm $LUDUSAVI_FILE
 
 if [ ! -d "$STEAM_BKUPER_DIR" ]; then
     git clone $STEAM_BKUPER_REPO $STEAM_BKUPER_DIR
@@ -94,7 +94,6 @@ if [[ "$STEAM_LOPTS" != "NULL" ]]; then
     # Edit the localconfig.vdf file to add the command to each of your games' launch options
     LCVDFO="$HOME/.steam/steam/userdata/$STEAM_ACCOUNTID/config/localconfig.vdf"
     LCVDF="$LCVDFO.bak.$TIMEEPOCH"
-    printf "/!\ WARNING /!\ \nAll your Launch Options will be overwritten by this script!\nAre you sure you want to continue?\nIn case you want to rollback, you could always restore:\n$LCVDF\n\nPress Enter to confirm or CTRL+C to exit the current script. " && read ans
     LOPTS="\\\t\t\t\t\t\t\"LaunchOptions\"		\"$STEAM_LOPTS\""
     if [ ! -f $LCVDF ]; then
       # DEBUG
@@ -110,17 +109,25 @@ if [[ "$STEAM_LOPTS" != "NULL" ]]; then
     sed -i '/"Playtime"/i '"$LOPTS"'' $LCVDFO
     echo "Successfully applied your Launch Options to your Steam library!"
     echo ""
-    echo "To restore the previous version of localconfig.vdf, type the following commands:"
+    echo "If you want to restore the previous version of your localconfig.vdf, type the following commands:"
     echo "cp $LCVDFO $LCVDFO.bak"
     echo "cp $LCVDF $LCVDFO"
+    echo ""
     ###
 
     ###
     # Define STEAM_LAST_LOPTS variable in $STEAM_BKUPER_DIR/.env
     if [ -f "$STEAM_BKUPER_DIR/.env" ]; then
-        # Use sed to replace the value of STEAM_LAST_LOPTS
-        sed -i --expression "s@export STEAM_LAST_LOPTS=\"[^\"]*\"@export STEAM_LAST_LOPTS=\"${STEAM_LOPTS}\"@" $STEAM_BKUPER_DIR/.env
-        echo "Successfully updated STEAM_LAST_LOPTS in .env file."
+        # Check if the line containing STEAM_LAST_LOPTS exists (ignoring comments)
+        if grep -q "^export STEAM_LAST_LOPTS=" "$STEAM_BKUPER_DIR/.env"; then
+            # Use sed to replace the value of STEAM_LAST_LOPTS
+            sed -i --expression "s@^export STEAM_LAST_LOPTS=\"[^\"]*\"@export STEAM_LAST_LOPTS=\"$STEAM_LOPTS\"@" $STEAM_BKUPER_DIR/.env
+            echo "Successfully updated STEAM_LAST_LOPTS in .env file."
+        else
+            # If the line doesn't exist, add it to a new line at the end of the file
+            echo -e "\nexport STEAM_LAST_LOPTS=\"$STEAM_LOPTS\"" >> $STEAM_BKUPER_DIR/.env
+            echo "Added STEAM_LAST_LOPTS to .env file."
+        fi
     else
         echo ".env file not found. Please make sure the file exists in the current directory."
     fi

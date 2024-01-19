@@ -75,7 +75,14 @@ Here are examples of behaviour you can apply by modifying the `STEAM_LOPTS` vari
 ```
 
 ### Final touches
-Once you are satisfied with your variables in the `.env` file, you can launch the installation by typing this command:
+> [!WARNING]
+> All your Launch Options will be overwritten by the following script!
+>
+> But don't worry, you can always rollback:
+>
+> A copy of `localconfig.vdf` is created and the script gives you a command to easily restore it back!
+
+Once you are satisfied with your variables in the `.env` file, you can launch the installation:
 ```
 ./steam-backup-setup.sh
 ```
