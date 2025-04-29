@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
+#DEBUG
+#set -x
+
 # Get current timestamp
 TIMEEPOCH=$(date +'%F_%H.%M.%S')
 # Get current script's directory
@@ -16,7 +19,7 @@ fi
 
 cd $BIN_DIR
 wget -qc https://github.com/mtkennerly/ludusavi/releases/download/$LUDUSAVI_VER/$LUDUSAVI_FILE -O $LUDUSAVI_FILE
-unzip -oq $LUDUSAVI_FILE
+tar zxf $LUDUSAVI_FILE
 rm $LUDUSAVI_FILE
 echo "Installed ludusavi $LUDUSAVI_VER"
 

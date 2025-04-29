@@ -19,11 +19,11 @@ This script has been specially made to ensure that those who use it NEVER EVER l
 
 ## Prerequisites
 > [!IMPORTANT]
-> You must be on the **Beta** version of SteamOS 3.5.7 (as of 01/19/24 - OS Build: `20231122.1`) for the latest version of ludusavi (v0.22.0) to work.
+> (The following information is probably outdated) You must be on the **Beta** version of SteamOS 3.5.7 (as of 01/19/24 - OS Build: `20231122.1`) for the latest version of ludusavi (v0.22.0) to work.
 >
 > If you don't want to switch to SteamOS Beta, you could downgrade to ludusavi v0.19.0 (latest version working on Stable) by modifying `LUDUSAVI_VER` in `.env`.
 
-- Tested on Arch Linux/SteamOS 3.5.7 Beta and Ubuntu 22.04.3 but could be working on other distros
+- Tested on Arch Linux (6.14.4-arch1-1) as of **04/29/25**, SteamOS 3.5.7 Beta and Ubuntu 22.04.3 but could be working on other distros
 - Git
 
 ## Usage
@@ -89,6 +89,7 @@ Here are examples of behaviour you can apply by modifying the `STEAM_LOPTS` vari
 
 Once you are satisfied with your variables in the `.env` file, you can launch the installation:
 ```
+chmod +x ./steam-backup-setup.sh
 ./steam-backup-setup.sh
 ```
 To allow the git repositories to push content to remote in the background while in "Game Mode", you must enter these commands the first time:
@@ -98,6 +99,7 @@ git config --global credential.helper store
 ```
 Then run `$BIN_DIR/my-steam-backup.sh` from your terminal so you are asked to type your git login and password for each repositories once to store them:
 ```
+chmod +x /path/to/script/my-steam-backup.sh
 /path/to/script/my-steam-backup.sh
 ```
 You are now ready to backup your whole Steam library!
