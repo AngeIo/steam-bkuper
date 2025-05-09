@@ -16,6 +16,7 @@ This script has been specially made to ensure that those who use it NEVER EVER l
 - [x] Use Git for backup versioning
 - [x] While game is starting and/or when game is closed, do a backup
 - [x] "Launch Options" are automatically set on all games of your Steam library
+- [ ] While setting new launch options, show/extract a list of existing ones or different from `STEAM_LOPTS` value so the user can merge them manually
 
 ## Prerequisites
 > [!IMPORTANT]
