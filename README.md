@@ -113,6 +113,13 @@ To make sure everything is working:
 
 Check your remote Git repository (GitHub, GitLab, etc.), if the directory `$STEAM_SAVES_DIR/ludusavi-backup` is populated with your save files then congratulations!
 
+> [!CAUTION]
+> If you use multiple computers at the same time (for example, your Steam Deck and desktop PC) with this program, `git` conflicts can and will happen!!
+> 
+> Please make sure, once in a while, that your saves are still pushed to the remote repository.
+> 
+> If somebody with enough `git` knowledge wants to help, you are more than welcome to create a pull request, thanks! :)
+
 You are now safe from any defects your Steam Deck/PC may encounter!
 
 ### Final files tree
