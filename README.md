@@ -104,6 +104,29 @@ chmod +x /path/to/script/my-steam-backup.sh
 /path/to/script/my-steam-backup.sh
 ```
 You are now ready to backup your whole Steam library!
+> [!WARNING]
+> **One last thing!**
+>
+> If you want to disable backups for a specific game somehow _(mainly because saves takes too much space and a single file exceeds the 100MB limit on GitHub and GitLab, cc **Hytale**)_, do the following:
+>
+> You must type the command `ludusavi`
+>
+> On the GUI, untick the unwanted game(s) so it is added to the configuration file.
+>
+> _Or, if you know what you are doing, you can directly edit the config file with_ <code>vi \`ludusavi config path\`</code> _like so:_
+>
+> ```
+> [...]
+> backup:
+>   path: /home/agerard/ludusavi-backup
+>   ignoredGames:
+>     - Hytale
+>   filter:
+>     excludeStoreScreenshots: false
+> [...]
+> ```
+>
+> That's it! Next time you'll run the script, it will skip the chosen game(s)!
 
 ### How does it work?
 To make sure everything is working:

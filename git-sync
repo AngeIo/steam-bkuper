@@ -4,7 +4,7 @@
 #
 # synchronize tracking repositories
 #
-# 2012-20 by Simon Thum and contributors
+# 2012-2025 by Simon Thum and contributors
 # Licensed as: CC0
 #
 # This script intends to sync via git near-automatically
@@ -32,12 +32,6 @@
 # changes, pull etc. without losing any data. When check returns
 # 0, sync can start immediately. This does not, however, indicate
 # that syncing is at all likely to succeed.
-
-# command used to auto-commit file modifications
-DEFAULT_AUTOCOMMIT_CMD="git add -u ; git commit -m \"%message\";"
-
-# command used to auto-commit all changes
-ALL_AUTOCOMMIT_CMD="git add -A ; git commit -m \"%message\";"
 
 # default commit message substituted into autocommit commands
 DEFAULT_AUTOCOMMIT_MSG="changes from $(uname -n) on $(date)"
@@ -95,6 +89,70 @@ __gitdir()
 	fi
 }
 
+__syncnew_flag()
+{
+    if [[ "true" == "$sync_new_files_anyway" ]]; then
+        echo "true"
+        return
+    fi
+
+    syncnew_flag="$(git config --get --bool branch.$branch_name.syncNewFiles)"
+    if [ -z "$syncnew_flag" ] ; then
+        syncnew_flag="$(git config --get --bool git-sync.syncNewFiles)"
+    fi
+    if [ -z "$syncnew_flag" ] ; then
+        syncnew_flag="false"
+    fi
+
+    echo "$syncnew_flag"
+}
+
+__sync_flag()
+{
+    if [[ "true" == "$sync_anyway" ]]; then
+        echo "true"
+        return
+    fi
+
+    sync_flag="$(git config --get --bool branch.$branch_name.sync)"
+    if [ -z "$sync_flag" ] ; then
+        sync_flag="$(git config --get --bool git-sync.syncEnabled)"
+    fi
+    if [ -z "$sync_flag" ] ; then
+        sync_flag="false"
+    fi
+
+    echo "$sync_flag"
+}
+
+# compose the add step command
+__gitadd()
+{
+    if [[ "true" == "$(__syncnew_flag)" ]]; then
+        echo git add -A
+    else
+        echo git add -u
+    fi
+}
+
+# compose the commit step command
+__gitcommit()
+{
+    skip_hooks="$(git config --get --bool branch.$branch_name.syncSkipHooks)"
+    if [ -z "$skip_hooks" ] ; then
+        skip_hooks="$(git config --get --bool git-sync.syncSkipHooks)"
+    fi
+    if [ -z "$skip_hooks" ] ; then
+        skip_hooks="false"
+    fi
+
+    if [[ "true" == "$skip_hooks" ]]; then
+        echo git commit --no-verify -m \"%message\"
+    else
+        echo git commit -m \"%message\"
+    fi
+}
+
 # echos repo state
 git_repo_state ()
 {
@@ -145,8 +203,7 @@ git_repo_state ()
 # check if we only have untouched, modified or (if configured) new files
 check_initial_file_state()
 {
-    local syncNew="$(git config --get --bool branch.$branch_name.syncNewFiles)"
-    if [[ "true" == "$syncNew" || "true" == "$sync_new_files_anyway" ]]; then
+    if [[ "true" == "$(__syncnew_flag)" ]]; then
 	# allow for new files
 	if [ ! -z "$(git status --porcelain | grep -E '^[^ \?][^M\?] *')" ]; then
 	    echo "NonNewOrModified"
@@ -257,7 +314,7 @@ if [ -z "$remote_name" ] ; then
 fi
 
 # check if current branch is configured for sync
-if [[ "true" != "$(git config --get --bool branch.$branch_name.sync)" && "true" != "$sync_anyway" ]] ; then
+if [[ "true" != "$(__sync_flag)" ]] ; then
     echo
     __log_msg "Please use"
     echo
@@ -308,10 +365,8 @@ if [ ! -z "$(local_changes)" ]; then
     # discern the three ways to auto-commit
     if [ ! -z "$config_autocommit_cmd" ]; then
 	autocommit_cmd="$config_autocommit_cmd"
-    elif [[ "true" == "$(git config --get --bool branch.$branch_name.syncNewFiles)" || "true" == "$sync_new_files_anyway" ]]; then
-	autocommit_cmd=${ALL_AUTOCOMMIT_CMD}
     else
-        autocommit_cmd=${DEFAULT_AUTOCOMMIT_CMD}
+        autocommit_cmd="$(__gitadd); $(__gitcommit);"
     fi
 
     commit_msg="$(git config --get branch.$branch_name.syncCommitMsg)"
@@ -334,9 +389,7 @@ fi
 # fetch remote to get to the current sync state
 # TODO make fetching/pushing optional
 __log_msg "Fetching from $remote_name/$branch_name"
-datenow=$(date +'%F_%H.%M.%S')
-GIT_TRACE=1 git fetch $remote_name $branch_name >> /tmp/$datenow.testlogfetch
-echo $? >> /tmp/$datenow.testlogfetch
+git fetch $remote_name $branch_name
 if [ $? != 0 ] ; then
     __log_msg "git fetch $remote_name returned non-zero. Likely a network problem; exiting."
     exit 3
@@ -378,7 +431,7 @@ case "$(sync_state)" in
 	git rebase $remote_name/$branch_name
 	if [[ $? == 0 && -z "$(git_repo_state)" && "ahead" == "$(sync_state)" ]] ; then
 	    __log_msg "Rebasing went fine, pushing..."
-		git push origin-new $branch_name:$branch_name
+	    git push origin-new $branch_name:$branch_name
 	    git push $remote_name $branch_name:$branch_name
 	    exit_assuming_sync
 	else
