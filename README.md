@@ -1,3 +1,5 @@
+
+
 # Steam BKUPER
 This script is designed to backup all Steam game save files to git automatically (optimized for Steam Deck).
 
@@ -67,17 +69,17 @@ Here are examples of behaviour you can apply by modifying the `STEAM_LOPTS` vari
 
 #### Backup after the game is closed (default)
 ```
-%command%;/path/to/script/my-steam-backup.sh
+%command%;$HOME/bin/my-steam-backup.sh
 ```
 
 #### Backup before the game is starting
 ```
-/path/to/script/my-steam-backup.sh;%command%
+$HOME/bin/my-steam-backup.sh;%command%
 ```
 
 #### Backup before the game is starting and after the game is closed
 ```
-/path/to/script/my-steam-backup.sh;%command%;/path/to/script/my-steam-backup.sh
+$HOME/bin/my-steam-backup.sh;%command%;$HOME/bin/my-steam-backup.sh
 ```
 
 ### Final touches
@@ -151,19 +153,19 @@ Here is what your directories should look like in `STEAM_SAVES_DIR`:
 (deck@asundeck steam-saves)$ tree
 .
 ├── ludusavi-backup
-│   ├── Alien_ Isolation
-│   │   ├── drive-0
-│   │   │   └── home
-│   │   │       └── deck
-│   │   └── mapping.yaml
+│   ├── Alien_ Isolation
+│   │   ├── drive-0
+│   │   │   └── home
+│   │   │       └── deck
+│   │   └── mapping.yaml
 
 [...]
 
-│   └── Uno (2016)
-│       ├── drive-0
-│       │   └── home
-│       │       └── deck
-│       └── mapping.yaml
+│   └── Uno (2016)
+│       ├── drive-0
+│       │   └── home
+│       │       └── deck
+│       └── mapping.yaml
 ├── README.md
 └── typescript
 
